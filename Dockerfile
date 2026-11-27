@@ -60,7 +60,7 @@ HEALTHCHECK --interval=15s --timeout=4s --start-period=10s --retries=3 \
 CMD ["uvicorn", "passaudit.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
 
 # -------------------------------------------------------------------------- frontend build
-FROM node:22-slim AS web-build
+FROM node:25-slim AS web-build
 
 WORKDIR /app/frontend
 COPY frontend/package.json frontend/package-lock.json ./
