@@ -69,7 +69,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # ---------------------------------------------------------------------------------- web image
-FROM nginxinc/nginx-unprivileged:1.28-alpine AS web
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS web
 
 LABEL org.opencontainers.image.title="PassAudit web" \
       org.opencontainers.image.description="PassAudit frontend behind a strict Content-Security-Policy" \
