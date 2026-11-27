@@ -1,0 +1,197 @@
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------------- base */
+@layer base {
+  html {
+    font-family: theme('fontFamily.sans');
+    font-feature-settings:
+      'cv11' 1,
+      'ss01' 1,
+      'calt' 1; /* Inter: single-storey a, open digits, contextual alternates */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-dvh bg-canvas text-base text-fg antialiased;
+  }
+
+  /* Edge draws its own "reveal password" / clear buttons inside password fields. PasswordInput
+     has its own labelled toggle, so hide the native one (two eyes side by side is confusing). */
+  input[type='password']::-ms-reveal,
+  input[type='password']::-ms-clear {
+    display: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight text-fg;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgb(var(--primary) / 0.3);
+    color: rgb(var(--fg));
+  }
+
+  /* One focus indicator for everything, drawn as an outline so it also works in forced-colors. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: 2px;
+  }
+  /* Controls that draw their own border/box get an inset offset instead. */
+  :where(input, select, textarea):focus-visible {
+    outline-offset: 0;
+  }
+
+  /* Slim scrollbars that follow the theme. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--fg-subtle) / 0.5) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgb(var(--fg-subtle) / 0.4);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--fg-subtle) / 0.7);
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Numbers in data views should align. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+}
+
+/* -------------------------------------------------------------------- components */
+@layer components {
+  /* Ambient backdrop: soft brand glows over the canvas, plus a faint masked grid. */
+  .bg-ambient {
+    background:
+      radial-gradient(
+        60rem 38rem at 88% -12%,
+        rgb(var(--purple) / var(--glow-purple)),
+        transparent 62%
+      ),
+      radial-gradient(
+        52rem 36rem at -8% -4%,
+        rgb(var(--primary) / var(--glow-primary)),
+        transparent 58%
+      ),
+      radial-gradient(
+        44rem 30rem at 50% 118%,
+        rgb(var(--cyan) / var(--glow-cyan)),
+        transparent 62%
+      ),
+      rgb(var(--canvas));
+    background-attachment: fixed;
+  }
+  .bg-ambient::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgb(var(--line) / var(--grid-alpha)) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / var(--grid-alpha)) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 20%, transparent 75%);
+    z-index: 0;
+  }
+
+  /* Glassmorphism: translucent surface, blur, hairline border, top sheen. */
+  .glass {
+    background-color: rgb(var(--surface) / 0.62);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid rgb(var(--line) / 0.1);
+    box-shadow: theme('boxShadow.card');
+  }
+  .glass-strong {
+    background-color: rgb(var(--surface) / 0.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    backdrop-filter: blur(24px) saturate(1.5);
+    border: 1px solid rgb(var(--line) / 0.12);
+    box-shadow: theme('boxShadow.pop');
+  }
+  /* Browsers without backdrop-filter, and users who ask for more contrast, get solid surfaces. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass,
+    .glass-strong {
+      background-color: rgb(var(--surface));
+    }
+  }
+  @media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+    .glass,
+    .glass-strong {
+      background-color: rgb(var(--surface));
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      border-color: rgb(var(--line) / 0.4);
+    }
+  }
+
+  .gradient-text {
+    background-image: theme('backgroundImage.brand-gradient');
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .skip-link {
+    @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-fg shadow-glow-primary transition-transform;
+  }
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+}
+
+/* ----------------------------------------------------------------- user preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .glass,
+  .glass-strong {
+    border-color: CanvasText;
+  }
+  .gradient-text {
+    color: CanvasText;
+    background: none;
+  }
+}

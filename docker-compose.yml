@@ -1,0 +1,85 @@
+# PassAudit with Docker Compose. Full guide: docs/docker.md
+#
+#   docker compose up --build -d        # then open http://127.0.0.1:8080
+#   docker compose down
+#
+# Security posture (all of it is on purpose):
+#   * the web UI is published on 127.0.0.1 only - never on all interfaces;
+#   * the API has NO authentication, so it publishes no port at all and sits on an internal
+#     network that has no route to the internet: by default PassAudit cannot make a network call;
+#   * every container runs unprivileged, read-only, with all capabilities dropped;
+#   * nothing logs request lines (nginx access log is off; the API logs method, route, status).
+
+name: passaudit
+
+services:
+  api:
+    build:
+      context: .
+      target: api
+    image: passaudit-api:local
+    restart: unless-stopped
+    environment:
+      PASSAUDIT_ENV: production
+      PASSAUDIT_LOG_LEVEL: ${PASSAUDIT_LOG_LEVEL:-info}
+      # The browser reaches the API through nginx on the same origin, so no CORS origin is needed.
+      PASSAUDIT_CORS_ORIGINS: "[]"
+      PASSAUDIT_ALLOWED_HOSTS: '["localhost","127.0.0.1","[::1]"]'
+      # Every request arrives from the web container, so all clients share one rate-limit bucket.
+      PASSAUDIT_RATE_LIMIT_PER_MINUTE: ${PASSAUDIT_RATE_LIMIT_PER_MINUTE:-300}
+      PASSAUDIT_RATE_LIMIT_BURST: ${PASSAUDIT_RATE_LIMIT_BURST:-100}
+      PASSAUDIT_BATCH_MAX_ITEMS: ${PASSAUDIT_BATCH_MAX_ITEMS:-50}
+      PASSAUDIT_MAX_CONCURRENT_ANALYSES: ${PASSAUDIT_MAX_CONCURRENT_ANALYSES:-2}
+      # Opt-in features stay off unless you add docker-compose.data.yml / docker-compose.egress.yml.
+      PASSAUDIT_EXTERNAL_LOOKUPS_ENABLED: "false"
+    networks: [backend]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 512m
+
+  web:
+    build:
+      context: .
+      target: web
+    image: passaudit-web:local
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      # Loopback only. Change the left-hand port with PASSAUDIT_WEB_PORT, never the 127.0.0.1.
+      - "127.0.0.1:${PASSAUDIT_WEB_PORT:-8080}:8080"
+    networks: [frontend, backend]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 64
+    mem_limit: 128m
+
+  # The command-line tool, with no network at all:
+  #   docker compose run --rm -T cli audit --stdin < password.txt
+  #   docker compose run --rm cli version
+  cli:
+    profiles: [cli]
+    image: passaudit-api:local
+    build:
+      context: .
+      target: api
+    entrypoint: ["passaudit"]
+    network_mode: none
+    stdin_open: true
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+networks:
+  # No external route: containers attached only to this network cannot reach the internet.
+  backend:
+    internal: true
+  # Gives the web container a published port. The API is deliberately not on it.
+  frontend: {}

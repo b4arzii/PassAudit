@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" role="img" aria-labelledby="t d">
+  <title id="t">Where a password goes</title>
+  <desc id="d">A password is typed into PassAudit, analysed in memory on your own machine, and returns a score, patterns and advice. By default nothing leaves the machine. An optional breach check, enabled twice, sends only a five character hash prefix.</desc>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#39ff88"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#9ea6b2"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#39ff88"/>
+    </marker>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#39ff88" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#39ff88" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="380" rx="22" fill="#0b0d10"/>
+  <rect x="0.5" y="0.5" width="1199" height="379" rx="21.5" fill="none" stroke="#ffffff" stroke-opacity="0.09"/>
+
+  <g font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <!-- your machine boundary -->
+    <rect x="28" y="28" width="1144" height="196" rx="18" fill="url(#glow)" stroke="#39ff88" stroke-opacity="0.45" stroke-dasharray="7 7"/>
+    <text x="52" y="58" font-size="13" font-weight="700" letter-spacing="2" fill="#39ff88">YOUR MACHINE</text>
+
+    <!-- 1: password -->
+    <rect x="64" y="90" width="236" height="104" rx="16" fill="#14171c" stroke="#ffffff" stroke-opacity="0.1"/>
+    <g transform="translate(88 114)" fill="none" stroke="#9ea6b2" stroke-width="2.4" stroke-linecap="round">
+      <rect x="2" y="12" width="24" height="18" rx="4"/><path d="M7 12V8a7 7 0 0 1 14 0v4"/>
+    </g>
+    <text x="128" y="132" font-size="20" font-weight="700" fill="#eceff4">Your password</text>
+    <text x="128" y="156" font-size="14" fill="#9ea6b2">hidden prompt, stdin,</text>
+    <text x="128" y="174" font-size="14" fill="#9ea6b2">or a JSON POST body</text>
+
+    <path d="M304 142H388" stroke="#9ea6b2" stroke-width="2.4" marker-end="url(#arrow)"/>
+
+    <!-- 2: PassAudit -->
+    <rect x="392" y="74" width="416" height="136" rx="18" fill="#14171c" stroke="url(#brand)" stroke-width="2"/>
+    <g transform="translate(416 100) scale(1.05)">
+      <path d="M32 9 14 16v15c0 11.5 7.4 20.3 18 24 10.6-3.7 18-12.5 18-24V16L32 9Z" fill="url(#brand)"/>
+      <rect x="24" y="29" width="16" height="12" rx="3" fill="#14171c"/>
+      <path d="M27 29v-3.5a5 5 0 0 1 10 0V29" fill="none" stroke="#14171c" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <text x="492" y="124" font-size="22" font-weight="800" fill="#eceff4">Pass<tspan fill="#39ff88">Audit</tspan></text>
+    <text x="492" y="148" font-size="14" fill="#9ea6b2">analysed in memory, by the engine</text>
+    <g font-size="13" font-weight="600" fill="#eceff4">
+      <rect x="416" y="166" width="108" height="28" rx="14" fill="#1b1f26"/><text x="470" y="185" text-anchor="middle">not stored</text>
+      <rect x="532" y="166" width="104" height="28" rx="14" fill="#1b1f26"/><text x="584" y="185" text-anchor="middle">not logged</text>
+      <rect x="644" y="166" width="140" height="28" rx="14" fill="#1b1f26"/><text x="714" y="185" text-anchor="middle">not in any report</text>
+    </g>
+
+    <path d="M812 142H896" stroke="#9ea6b2" stroke-width="2.4" marker-end="url(#arrow)"/>
+
+    <!-- 3: result -->
+    <rect x="900" y="90" width="236" height="104" rx="16" fill="#14171c" stroke="#ffffff" stroke-opacity="0.1"/>
+    <text x="924" y="120" font-size="20" font-weight="700" fill="#eceff4">What comes back</text>
+    <text x="924" y="145" font-size="14" fill="#9ea6b2">score, strength, advice,</text>
+    <text x="924" y="163" font-size="14" fill="#9ea6b2">and where patterns are</text>
+    <text x="924" y="181" font-size="14" fill="#9ea6b2">(positions, not text)</text>
+  </g>
+
+  <g font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <!-- default lane -->
+    <rect x="28" y="244" width="556" height="108" rx="18" fill="#14171c" stroke="#ffffff" stroke-opacity="0.09"/>
+    <circle cx="76" cy="298" r="22" fill="none" stroke="#fb7185" stroke-width="3"/>
+    <path d="M60 314L92 282" stroke="#fb7185" stroke-width="3" stroke-linecap="round"/>
+    <text x="118" y="288" font-size="19" font-weight="700" fill="#eceff4">By default: no network at all</text>
+    <text x="118" y="312" font-size="14" fill="#9ea6b2">No telemetry, no analytics, no CDN, no update check.</text>
+    <text x="118" y="332" font-size="14" fill="#9ea6b2">In Docker the API has no route to the internet.</text>
+
+    <!-- opt-in lane -->
+    <rect x="616" y="244" width="556" height="108" rx="18" fill="#14171c" stroke="#a78bfa" stroke-opacity="0.5" stroke-dasharray="6 6"/>
+    <text x="640" y="274" font-size="12" font-weight="700" letter-spacing="2" fill="#a78bfa">OPT-IN, TWICE</text>
+    <text x="640" y="299" font-size="19" font-weight="700" fill="#eceff4">Breach check: a 5-character prefix</text>
+    <text x="640" y="322" font-size="14" fill="#9ea6b2">Only the first 5 hex characters of a SHA-1 hash are sent;</text>
+    <text x="640" y="340" font-size="14" fill="#9ea6b2">matching happens locally. Or use a local hash file: no network.</text>
+  </g>
+</svg>

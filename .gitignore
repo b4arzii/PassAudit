@@ -1,0 +1,49 @@
+# --- Secrets & local environment -------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+
+# --- Python -----------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist-py/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+bandit-report.*
+
+# --- Node / frontend --------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/coverage/
+*.tsbuildinfo
+npm-debug.log*
+.vite/
+
+# --- Data that must never be committed --------------------------------------
+# Password lists, breach corpora, audit inputs/outputs and local databases.
+/data/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# --- Editors / OS -----------------------------------------------------------
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 440" role="img" aria-labelledby="t d">
+  <title id="t">PassAudit</title>
+  <desc id="d">PassAudit: audit passwords without ever exposing them. A masked password where only the positions of weaknesses are shown, and a risk card reading 9 out of 100.</desc>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#39ff88"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#39ff88"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="gG" cx="0.14" cy="0.12" r="0.55">
+      <stop offset="0" stop-color="#39ff88" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#39ff88" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gP" cx="0.9" cy="0.05" r="0.5">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gC" cx="0.72" cy="1.05" r="0.55">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <clipPath id="card"><rect width="1280" height="440" rx="24"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1280" height="440" fill="#07080a"/>
+    <rect width="1280" height="440" fill="url(#grid)"/>
+    <rect width="1280" height="440" fill="url(#gG)"/>
+    <rect width="1280" height="440" fill="url(#gP)"/>
+    <rect width="1280" height="440" fill="url(#gC)"/>
+  </g>
+  <rect x="0.5" y="0.5" width="1279" height="439" rx="23.5" fill="none" stroke="#ffffff" stroke-opacity="0.09"/>
+
+  <!-- shield + lock (the app's logo) -->
+  <g transform="translate(84 74) scale(2.75)">
+    <path d="M32 9 14 16v15c0 11.5 7.4 20.3 18 24 10.6-3.7 18-12.5 18-24V16L32 9Z" fill="#39ff88" opacity="0.55" filter="url(#glow)"/>
+    <path d="M32 9 14 16v15c0 11.5 7.4 20.3 18 24 10.6-3.7 18-12.5 18-24V16L32 9Z" fill="url(#brand)"/>
+    <rect x="24" y="29" width="16" height="12" rx="3" fill="#07080a"/>
+    <path d="M27 29v-3.5a5 5 0 0 1 10 0V29" fill="none" stroke="#07080a" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- wordmark -->
+  <g font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <text x="272" y="176" font-size="96" font-weight="800" letter-spacing="-2" fill="#eceff4">Pass<tspan fill="url(#word)">Audit</tspan></text>
+    <text x="276" y="226" font-size="30" font-weight="500" fill="#9ea6b2">Audit passwords without ever exposing them.</text>
+    <text x="276" y="264" font-size="19" fill="#848d9c">Local-first  ·  No telemetry  ·  Opt-in external checks  ·  MIT</text>
+  </g>
+
+  <!-- risk card -->
+  <g font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <rect x="936" y="78" width="248" height="172" rx="18" fill="#14171c" stroke="#ffffff" stroke-opacity="0.09"/>
+    <text x="962" y="112" font-size="13" font-weight="700" letter-spacing="2" fill="#848d9c">RISK</text>
+    <text x="962" y="168" font-size="58" font-weight="800" fill="#eceff4">9<tspan font-size="22" font-weight="500" fill="#848d9c"> /100</tspan></text>
+    <text x="1158" y="112" font-size="14" font-weight="700" text-anchor="end" fill="#34d399">Low risk</text>
+    <rect x="962" y="196" width="196" height="10" rx="5" fill="#2a2f38"/>
+    <rect x="962" y="196" width="26" height="10" rx="5" fill="#39ff88"/>
+    <circle cx="988" cy="201" r="7" fill="#07080a" stroke="#39ff88" stroke-width="3"/>
+    <text x="962" y="232" font-size="13" fill="#9ea6b2">Strength 4/4  ·  1 rule broken</text>
+  </g>
+
+  <!-- masked pattern strand: positions, never text -->
+  <g font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, 'SFMono-Regular', monospace" font-size="15" font-weight="700" text-anchor="middle">
+    <g fill="#fb7185">
+      <rect x="84" y="338" width="30" height="30" rx="8"/><rect x="120" y="338" width="30" height="30" rx="8"/>
+      <rect x="156" y="338" width="30" height="30" rx="8"/><rect x="192" y="338" width="30" height="30" rx="8"/>
+      <rect x="228" y="338" width="30" height="30" rx="8"/><rect x="264" y="338" width="30" height="30" rx="8"/>
+      <rect x="300" y="338" width="30" height="30" rx="8"/><rect x="336" y="338" width="30" height="30" rx="8"/>
+    </g>
+    <g fill="#39ff88">
+      <rect x="372" y="338" width="30" height="30" rx="8"/><rect x="408" y="338" width="30" height="30" rx="8"/>
+      <rect x="444" y="338" width="30" height="30" rx="8"/><rect x="480" y="338" width="30" height="30" rx="8"/>
+    </g>
+    <g fill="#2a2f38">
+      <rect x="516" y="338" width="30" height="30" rx="8"/><rect x="552" y="338" width="30" height="30" rx="8"/>
+      <rect x="588" y="338" width="30" height="30" rx="8"/><rect x="624" y="338" width="30" height="30" rx="8"/>
+      <rect x="660" y="338" width="30" height="30" rx="8"/><rect x="696" y="338" width="30" height="30" rx="8"/>
+    </g>
+    <g fill="#07080a">
+      <text x="99" y="359">C</text><text x="135" y="359">C</text><text x="171" y="359">C</text><text x="207" y="359">C</text>
+      <text x="243" y="359">C</text><text x="279" y="359">C</text><text x="315" y="359">C</text><text x="351" y="359">C</text>
+      <text x="387" y="359">D</text><text x="423" y="359">D</text><text x="459" y="359">D</text><text x="495" y="359">D</text>
+    </g>
+    <g fill="#848d9c">
+      <text x="531" y="359">·</text><text x="567" y="359">·</text><text x="603" y="359">·</text>
+      <text x="639" y="359">·</text><text x="675" y="359">·</text><text x="711" y="359">·</text>
+    </g>
+  </g>
+  <g font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <text x="772" y="351" font-size="20" font-weight="700" fill="#eceff4">Findings are positions, never the text.</text>
+    <text x="772" y="376" font-size="15" fill="#9ea6b2"><tspan fill="#fb7185" font-weight="700">C</tspan> common password, chars 1-8   <tspan fill="#39ff88" font-weight="700">D</tspan> year, chars 9-12</text>
+  </g>
+</svg>

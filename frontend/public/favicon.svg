@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PassAudit">
+  <defs>
+    <linearGradient id="g" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#39ff88" />
+      <stop offset="1" stop-color="#22d3ee" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#07080a" />
+  <path d="M32 9 14 16v15c0 11.5 7.4 20.3 18 24 10.6-3.7 18-12.5 18-24V16L32 9Z" fill="url(#g)" />
+  <rect x="24" y="29" width="16" height="12" rx="3" fill="#07080a" />
+  <path d="M27 29v-3.5a5 5 0 0 1 10 0V29" fill="none" stroke="#07080a" stroke-width="3" stroke-linecap="round" />
+</svg>

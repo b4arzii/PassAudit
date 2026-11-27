@@ -1,0 +1,46 @@
+name: Release build
+
+# Builds the release artifacts for a version tag and attaches them to the WORKFLOW RUN only.
+# It deliberately does not publish: no PyPI upload, no container registry push, no GitHub
+# Release. Publishing is a manual, reviewed step (docs/release-checklist.md).
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Python sdist and wheel
+        run: |
+          python -m pip install build
+          python -m build --outdir dist
+      - name: Frontend production build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+          tar -czf ../dist/passaudit-web-dist.tar.gz -C dist .
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum ./*.whl ./*.tar.gz > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: passaudit-release-${{ github.ref_name }}
+          path: dist/
+          if-no-files-found: error

@@ -1,0 +1,48 @@
+# Keep the build context small and keep secrets out of every image layer.
+
+# Secrets and local environment (only the template is allowed in)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+
+# Data that must never be baked into an image: password lists, breach corpora, reuse indexes
+data/
+*.sqlite
+*.sqlite3
+*.db
+
+# VCS and editor state
+.git/
+.github/
+.vscode/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist-py/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Node
+node_modules/
+frontend/dist/
+frontend/coverage/
+*.tsbuildinfo
+.vite/
+
+# Not needed to build or run
+backend/tests/
+scripts/
+*.log

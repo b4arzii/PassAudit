@@ -1,0 +1,32 @@
+# Optional override: give the API read-only access to local data sets (docs/docker.md).
+#
+#   mkdir data            # then put your files in it (the folder is git-ignored)
+#   docker compose -f docker-compose.yml -f docker-compose.data.yml up -d
+#
+# Enable what you use by setting these in your shell or in a .env file next to this file:
+#   PASSAUDIT_BREACH_LOCAL_FILE=/data/pwned-sorted.txt        local breach check, no network
+#   PASSAUDIT_REUSE_INDEX_PATH=/data/reuse.idx                authorised reuse auditing
+#   PASSAUDIT_REUSE_KEY_FILE=/data/reuse.key                  (keep it out of the same folder in
+#   PASSAUDIT_REUSE_AUTHORIZATION_REFERENCE=TICKET-123         production; see docs/security.md)
+# The folder is mounted read-only: the API never writes there.
+
+services:
+  api:
+    volumes:
+      - type: bind
+        source: ${PASSAUDIT_DATA_DIR:-./data}
+        target: /data
+        read_only: true
+    environment:
+      PASSAUDIT_BREACH_LOCAL_FILE: ${PASSAUDIT_BREACH_LOCAL_FILE:-}
+      PASSAUDIT_REUSE_INDEX_PATH: ${PASSAUDIT_REUSE_INDEX_PATH:-}
+      PASSAUDIT_REUSE_KEY_FILE: ${PASSAUDIT_REUSE_KEY_FILE:-}
+      PASSAUDIT_REUSE_AUTHORIZATION_REFERENCE: ${PASSAUDIT_REUSE_AUTHORIZATION_REFERENCE:-}
+      PASSAUDIT_POLICY_PROFILES_PATH: ${PASSAUDIT_POLICY_PROFILES_PATH:-}
+
+  cli:
+    volumes:
+      - type: bind
+        source: ${PASSAUDIT_DATA_DIR:-./data}
+        target: /data
+        read_only: true

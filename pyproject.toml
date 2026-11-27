@@ -1,0 +1,156 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "passaudit"
+version = "0.1.0"
+description = "PassAudit - a local-first password security auditing tool."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "PassAudit contributors" }]
+classifiers = [
+  # Guards against an accidental PyPI upload; remove it only as a deliberate publishing decision
+  # (docs/release-checklist.md).
+  "Private :: Do Not Upload",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+# Runtime dependencies: keep this list minimal and review every addition
+# (see docs/security.md, "Dependency policy").
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "uvicorn>=0.34,<1.0",
+  "pydantic>=2.10,<3.0",
+  "pydantic-settings>=2.7,<3.0",
+  # Pure-Python (no native wheels), so it runs under Windows Application Control. Phase 2.
+  "zxcvbn>=4.5,<5.0",
+  # CLI (Phase 3). Both are pure Python.
+  "typer>=0.15,<1.0",
+  "rich>=13.9,<16.0",
+]
+
+[project.scripts]
+passaudit = "passaudit.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.9",
+  "mypy>=1.14",
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "httpx2>=2.0",
+  "bandit[toml]>=1.8",
+  "pip-audit>=2.7",
+]
+
+[tool.setuptools.packages.find]
+where = ["backend/src"]
+
+[tool.setuptools.package-data]
+passaudit = ["py.typed", "analysis/data/*.txt"]
+
+# --------------------------------------------------------------------------
+# Ruff: linting + formatting
+# --------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["backend/src", "backend/tests"]
+# ``build`` is where ``pip install .`` leaves a copy of the package inside the source tree.
+extend-exclude = [".venv", "frontend", "node_modules", "build", "dist-py"]
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # isort
+  "B",   # flake8-bugbear
+  "UP",  # pyupgrade
+  "SIM", # flake8-simplify
+  "C4",  # flake8-comprehensions
+  "S",   # flake8-bandit (security)
+  "T20", # flake8-print (no stray print statements)
+  "PT",  # flake8-pytest-style
+  "RUF", # ruff-specific rules
+  "N",   # pep8-naming
+  "ARG", # unused arguments
+  "PL",  # pylint subset
+  "TID", # tidy imports
+  "A",   # builtins shadowing
+]
+ignore = [
+  "PLR2004", # magic values are fine in tests/configs; revisit later
+]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/tests/**" = ["S101", "ARG", "PLR2004", "S105", "S106"] # asserts, fixtures and fake passwords are fine in tests
+# CLI commands expose many options as parameters (Typer builds the interface from them).
+"backend/src/passaudit/cli/**" = ["PLR0913", "PLR0912", "PLR0915", "PLR0917"]
+# Enum members are *named* after passwords ("master_password", "common_password"); they are labels, not secrets.
+"backend/src/passaudit/analysis/models.py" = ["S105"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["passaudit"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+# --------------------------------------------------------------------------
+# Mypy: strict type checking
+# --------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "backend/src"
+packages = ["passaudit"]
+plugins = ["pydantic.mypy"]
+warn_unreachable = true
+show_error_codes = true
+pretty = true
+
+[[tool.mypy.overrides]]
+# zxcvbn ships no type information; it is only touched in analysis/strength.py.
+module = "zxcvbn.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_decorators = false
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+# --------------------------------------------------------------------------
+# Pytest + coverage
+# --------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["backend/tests"]
+pythonpath = ["backend/src"]
+addopts = "-ra --strict-markers --strict-config"
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["passaudit"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
+
+# --------------------------------------------------------------------------
+# Bandit: static security analysis
+# --------------------------------------------------------------------------
+[tool.bandit]
+exclude_dirs = ["backend/tests", ".venv", "frontend", "node_modules"]

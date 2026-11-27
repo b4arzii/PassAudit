@@ -1,0 +1,20 @@
+# Optional override: allow the ONLINE breach check (docs/security.md, "Breach checking").
+#
+#   docker compose -f docker-compose.yml -f docker-compose.egress.yml up -d
+#
+# This does two things, and both are required - the two switches are separate on purpose:
+#   1. turns the server-side opt-in on (PASSAUDIT_EXTERNAL_LOOKUPS_ENABLED=true);
+#   2. gives the API container a route to the internet (it is on an isolated network otherwise).
+# A request must still ask for the check. The only thing ever sent is a 5-character SHA-1 prefix
+# of the password to api.pwnedpasswords.com (or PASSAUDIT_BREACH_API_URL), never the password.
+# If you do not accept that, do not use this file: the local hash file needs no network.
+
+services:
+  api:
+    environment:
+      PASSAUDIT_EXTERNAL_LOOKUPS_ENABLED: "true"
+      PASSAUDIT_BREACH_API_URL: ${PASSAUDIT_BREACH_API_URL:-https://api.pwnedpasswords.com/range}
+    networks: [backend, egress]
+
+networks:
+  egress: {}
